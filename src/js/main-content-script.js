@@ -2,6 +2,7 @@
 
 var $            = require("jquery");
 var conf         = require("./conf.json");
+var firefox      = require('./firefox/firefox.js');
 var Track        = require("./modules/Track");
 var plugins      = require("./plugins");
 var currentTrack = null;
@@ -23,6 +24,34 @@ function createGUID() {
     );
 }
 
+function getAccessToken() {
+
+    if (/scroblr\.fm\/access\-granted/i.test(window.location.href)) {
+
+        if (!/token=.+/i.test(window.location.search)) {
+            return true;
+        }
+
+        var token = window.location.search.split('=')[1];
+
+        if (typeof chrome != 'undefined') {
+            chrome.extension.sendMessage({
+                name: 'accessGranted',
+                message: token
+            });
+        } else if (typeof safari != 'undefined') {
+            safari.self.tab.dispatchMessage('accessGranted', token);
+        } else if (firefox) {
+            firefox.postMessage({
+                name: 'accessGranted',
+                message: token
+            });
+        }
+        return true;
+    }
+    return false;
+}
+
 /**
  * Calculates the amount of milliseconds that have passed since the track
  * started playing.
@@ -41,10 +70,18 @@ function init() {
 
     for (var key in plugins) {
 
+        if (conf.DEBUG) {
+            console.log("SCROBLR::::: Testing plugin ", key, document.location.hostname);
+        }
+
         if (plugins.hasOwnProperty(key) && plugins[key].test()) {
             host    = plugins[key];
             host.id = host.name.toUpperCase() + (new Date()).valueOf();
             plugins.length = 0;
+
+            if (conf.DEBUG) {
+                console.log("SCROBLR::::: Initializing plugin ", key);
+            }
 
             if (typeof host.initialize === "function") {
                 host.initialize();
@@ -136,8 +173,18 @@ function sendMessage(name, message) {
 			}
 		}
         safari.self.tab.dispatchMessage(name, msg);
+    } else if (firefox) {
+        firefox.postMessage({
+            name: name,
+            message: message
+        });
     }
 }
 
-init();
-
+/*
+ * Check for the access granted token on the scroblr access granted site. If
+ * not available, proceed as normal and initialize the content script.
+ */
+if (!getAccessToken()) {
+    init();
+}

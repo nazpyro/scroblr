@@ -5,20 +5,21 @@ var Plugin = require("../modules/Plugin");
 var Utils  = require("../modules/Utilities");
 var amazon = Object.create(Plugin);
 
-amazon.init("amazon", "Amazon Cloud Player");
+amazon.init("amazon", "Amazon Music");
 
 amazon.test = function () {
-    return (/amazon\.[A-Z\.]{2,}\/gp\/dmusic/i).test(document.location.href);
+    return (/music\.amazon\.[A-Z\.]{2,}/i).test(document.location.href);
 };
 
 amazon.scrape = function () {
+    var $playbackInfo = $(".playbackControlsView");
+    var $scrubber = $(".scrubberTrack .scrubber", $playbackInfo);
+
     return {
-        album:    $("#nowPlayingSection .currentSongAdditionalDetails span:last-child a").text(),
-        artist:   $("#nowPlayingSection .currentSongAdditionalDetails span:first-child a").text(),
-        duration: Utils.calculateDuration($("#nowPlayingSection .currentSongStatus #currentDuration").text()),
-        elapsed:  Utils.calculateDuration($("#nowPlayingSection .currentSongStatus #currentTime").text()),
-        stopped:  $("#mp3Player .mp3Player-MasterControl .mp3MasterPlayGroup .mp3MasterPlay").hasClass("icon-play"),
-        title:    $("#nowPlayingSection .currentSongDetails .title").text()
+        artist:  $(".trackArtist > a", $playbackInfo).attr("title"),
+        percent: Math.round($scrubber.width() / $scrubber.parent().width() * 100) / 100,
+        stopped: $(".playbackControls span.playButton", $playbackInfo).hasClass("playerIconPlay"),
+        title:   $(".trackTitle", $playbackInfo).text()
     };
 };
 

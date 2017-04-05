@@ -1,67 +1,81 @@
 {
-	"manifest_version": 2,
-	"background": {
-		"page": "background.html"
-	},
-	"browser_action": {
-		"default_icon": "img/icons/lastfm32.png",
-		"default_popup": "popup.html"
-	},
-	"content_scripts": [
-		{
-			"matches": [
-				"*://*.accuradio.com/*",
-				"*://*.amazon.com/gp/dmusic*",
-				"*://*.amazon.co.uk/gp/dmusic*",
-				"*://*.amazon.de/gp/dmusic*",
-				"*://*.bandcamp.com/*",
-				"*://*.beatsmusic.com/*",
+    "manifest_version": 2,
+    "background": {
+        "page": "background.html"
+    },
+    "browser_action": {
+        "default_icon": "img/icons/lastfm32.png",
+        "default_popup": "popup.html"
+    },
+    "content_scripts": [
+        {
+            "matches": [
+                "*://*.scroblr.fm/access*",
+                "*://*.player.abacast.net/*",
+                "*://*.accuradio.com/*",
+                "*://music.amazon.com/*",
+                "*://music.amazon.co.uk/*",
+                "*://music.amazon.de/*",
+                "*://*.bandcamp.com/*",
+                "*://*.beatsmusic.com/*",
+                "*://*.deezer.com/*",
+                "*://*.dubtrack.fm/*",
                 "*://*.earbits.com/*",
                 "*://*.focusatwill.com/music/*",
-				"*://play.google.com/music/*",
-				"*://*.jango.com/*",
-				"*://*.napster.co.uk/*",
-				"*://*.napster.de/*",
-				"*://*.pandora.com/*",
-				"*://*.player.fm/*",
-				"*://*.plug.dj/*",
-				"*://*.rhapsody.com/*",
-				"*://*.slipstreamradio.com/pop_player/*",
-				"*://*.songza.com/*",
-				"*://music.sonyentertainmentnetwork.com/*",
-				"*://*.soundcloud.com/*",
-				"*://*.thisismyjam.com/*",
-				"*://*.vk.com/*",
-				"*://*.youtube.com/watch*"
-			],
-			"js": [
+                "*://play.google.com/music/*",
+                "*://*.hoopladigital.com/title/*",
+                "*://*.jango.com/*",
+                "*://app.lifestore-flat.de/*",
+                "*://music.microsoft.com/*",
+                "*://*.napster.co.uk/*",
+                "*://*.napster.com/*",
+                "*://*.napster.de/*",
+                "*://*.npr.org/*",
+                "*://*.pandora.com/*",
+                "*://*.player.fm/*",
+                "*://*.plug.dj/*",
+                "*://play.pocketcasts.com/*",
+                "*://*.relevantmagazine.com/the-drop/*",
+                "*://*.rhapsody.com/*",
+                "*://*.slipstreamradio.com/pop_player/*",
+                "*://sndtst.com/*",
+                "*://somafm.com/player*",
+                "*://*.songza.com/*",
+                "*://*.soundcloud.com/*",
+                "*://play.spotify.com/*",
+                "*://*.thedrop.club/*",
+                "*://*.tidalhifi.com/*",
+                "*://*.vk.com/*",
+                "*://wonder.fm/*",
+                "*://*.xiami.com/play*",
+                "*://music.yandex.ru/*",
+                "*://*.youtube.com/watch*",
+                "*://*.di.fm/*"
+            ],
+            "js": [
                 "js/bundle-content-script.js"
-			],
-			"all_frames": true
-		},
-		{
-			"matches": ["*://*.scroblr.fm/access*"],
-			"js":      ["js/bundle-access-granted.js"]
-		}
-	],
-	"default_locale": "en",
-	"description": "A lightweight Last.fm scrobbler that scrobbles the music you listen to on the web.",
-	"icons": {
-		"16": "img/scroblr16.png",
-		"24": "img/scroblr24.png",
-		"48": "img/scroblr48.png",
-		"64": "img/scroblr64.png",
-		"128": "img/scroblr128.png"
-	},
-	"name": "scroblr",
-	"options_page": "options.html",
-	"permissions": [
-		"notifications",
-		"http://ws.audioscrobbler.com/2.0/"
-	],
-	"web_accessible_resources": [
-		"img/scroblr64.png"
-	],
-	"version": "2",
-	"content_security_policy": "script-src 'self' https://platform.twitter.com; font-src 'self' https://themes.googleusercontent.com; object-src 'self'"
+            ],
+            "all_frames": true
+        }
+    ],
+    "default_locale": "en",
+    "description": "A lightweight Last.fm scrobbler that scrobbles the music you listen to on the web.",
+    "icons": {
+        "16": "img/scroblr16.png",
+        "24": "img/scroblr24.png",
+        "48": "img/scroblr48.png",
+        "64": "img/scroblr64.png",
+        "128": "img/scroblr128.png"
+    },
+    "name": "scroblr",
+    "options_page": "options.html",
+    "permissions": [
+        "notifications",
+        "http://ws.audioscrobbler.com/2.0/"
+    ],
+    "web_accessible_resources": [
+        "img/scroblr64.png"
+    ],
+    "version": "2",
+    "content_security_policy": "script-src 'self' https://platform.twitter.com; font-src 'self' https://themes.googleusercontent.com; object-src 'self'"
 }

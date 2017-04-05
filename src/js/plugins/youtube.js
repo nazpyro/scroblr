@@ -2,16 +2,19 @@
 
 var $       = require("jquery");
 var Plugin  = require("../modules/Plugin");
+var Utils   = require("../modules/Utilities");
 var youtube = Object.create(Plugin);
 
 youtube.init("youtube", "YouTube");
 
 youtube.test = function () {
-    return (/youtube\.[A-Z\.]{2,}\/watch/i).test(document.location.href);
+    var domainMatch = (/youtube\.[A-Z\.]{2,}\/watch/i).test(document.location.href);
+    var playerFound = $("#eow-title").length > 0;
+    return domainMatch && playerFound;
 };
 
 youtube.scrape = function () {
-    var title       = $.trim($("#watch-headline-title").text());
+    var title       = $.trim($("#eow-title").text());
     var parsedTitle = title.replace(/^(.+)\s*[-–:]+\s*(.+)$/, "$1_,_$2").split("_,_");
 
     if (parsedTitle.length > 1) {
@@ -35,7 +38,10 @@ youtube.scrape = function () {
     }
 
     return {
-        title: title
+        title:    title,
+        elapsed:  Utils.calculateDuration($(".ytp-time-current").text()),
+        duration: Utils.calculateDuration($(".ytp-time-duration").text()),
+        stopped:  $(".ytp-play-button").attr("aria-label").toLowerCase() === "play"
     };
 };
 
@@ -49,7 +55,8 @@ youtube.scrape = function () {
 function cleanseTrack(artist, title) {
     title = $.trim(title);
     title = title.replace(/\s*\*+\s?\S+\s?\*+$/, ''); // **NEW**
-    title = title.replace(/\s*\[[^\]]+\]$/, ''); // [whatever]
+    title = title.replace(/\s*\[[^\]]+\]$/, ''); // [whatever] succeeding title
+    title = title.replace(/^\[[^\]]+\]\s*/, ''); // [whatever] preceding title
     title = title.replace(/\s*\([^\)]*version\)$/i, ''); // (whatever version)
     title = title.replace(/\s*\.(avi|wmv|mpg|mpeg|flv)$/i, ''); // video extensions
     title = title.replace(/\s*(of+icial\s*)?(music\s*)?video/i, ''); // (official)? (music)? video
@@ -62,15 +69,18 @@ function cleanseTrack(artist, title) {
     title = title.replace(/\s+\(?live\)?$/i, ''); // live
     title = title.replace(/\(\s*\)/, ''); // Leftovers after e.g. (official video)
     title = title.replace(/\(.*lyrics?\)/i, ''); // (with lyrics)
-    title = title.replace(/\s*with\s+lyrics?\s*$/i, ''); // with lyrics
+    title = title.replace(/\s*(with\s+)?lyrics?\s*$/i, ''); // (with)? lyrics
     title = title.replace(/^(|.*\s)"(.*)"(\s.*|)$/, '$2'); // Artist - The new "Track title" featuring someone
     title = title.replace(/^(|.*\s)'(.*)'(\s.*|)$/, '$2'); // 'Track title'
     title = title.replace(/^[\/\s,:;~-\s"]+/, ''); // trim starting white chars and dash
     title = title.replace(/[\/\s,:;~-\s"\s!]+$/, ''); // trim trailing white chars and dash
 
     return {
-        artist: artist,
-        title:  title
+        artist:   artist,
+        title:    title,
+        elapsed:  Utils.calculateDuration($(".ytp-time-current").text()),
+        duration: Utils.calculateDuration($(".ytp-time-duration").text()),
+        stopped:  $(".html5-video-player").hasClass("ended-mode")
     };
 }
 

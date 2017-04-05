@@ -1,8 +1,9 @@
 "use strict";
 
-var $     = require("jquery");
-var conf  = require("./conf.json");
-var md5   = require("MD5");
+var $       = require("jquery");
+var conf    = require("./conf.json");
+var firefox = require('./firefox/firefox.js');
+var md5     = require("MD5");
 
 window.scroblrGlobal = (function () {
     var keepalive;
@@ -93,14 +94,21 @@ window.scroblrGlobal = (function () {
      */
     function getTrackInfoCallback(data) {
         var trackParams = {
-            album:      $("track > album title", data).text() || currentTrack.album || "",
-            image:      $("track > album image[size=large]", data).text() || "",
             loved:      $("track userloved").text() == "1",
             url_album:  $("track > album url", data).text() || "",
             url_artist: $("track > artist url", data).text() || "",
             url_track:  $("track > url", data).text() || "",
             tags:       []
         };
+
+        if (currentTrack.album) {
+            trackParams.album = currentTrack.album;
+            // TODO Retrieve album art through API call.
+            trackParams.image = "";
+        } else {
+            trackParams.album = $("track > album title", data).text() || "";
+            trackParams.image = $("track > album image[size=large]", data).text() || "";
+        }
 
         if (!currentTrack.duration) {
             trackParams.duration = parseFloat($("track > duration", data).text());
@@ -190,6 +198,8 @@ window.scroblrGlobal = (function () {
             chrome.extension.onMessage.addListener(messageHandler);
         } else if (typeof safari != "undefined") {
             safari.application.addEventListener("message", messageHandler, false);
+        } else if (firefox) {
+            firefox.addEventListener(messageHandler);
         }
     }
 
@@ -309,6 +319,10 @@ window.scroblrGlobal = (function () {
                 }, 5000);
             }
         }
+
+        if (firefox) {
+            firefox.showNotification(message);
+        }
     }
 
     /**
@@ -322,12 +336,13 @@ window.scroblrGlobal = (function () {
 
         if (typeof chrome != "undefined") {
             chrome.tabs.create({
-                // url: conf.AUTH_URL + chrome.extension.getURL("access-granted.html")
                 url: conf.AUTH_URL + "http://scroblr.fm/access-granted.html"
             });
         } else if (typeof safari != "undefined") {
-            newTab = safari.application.activeBrowserWindow.openTab();
-            newTab.url = conf.AUTH_URL + safari.extension.baseURI + "access-granted.html";
+            newTab     = safari.application.activeBrowserWindow.openTab();
+            newTab.url = conf.AUTH_URL + "http://scroblr.fm/access-granted.html";
+        } else if (firefox) {
+            firefox.openTab(conf.AUTH_URL + "http://scroblr.fm/access-granted.html");
         }
 
         sendMessage("initUserForm", true);
@@ -402,6 +417,11 @@ window.scroblrGlobal = (function () {
                     message: message
                 });
             }
+        } else if (firefox) {
+            firefox.postMessage({
+                name:    name,
+                message: message
+            });
         }
     }
 
@@ -526,6 +546,7 @@ window.scroblrGlobal = (function () {
      * @param {object} track
      */
     function updateNowPlaying(track) {
+
         if (track.host === "youtube" && !getOptionStatus("youtube")) {
             return false;
         }

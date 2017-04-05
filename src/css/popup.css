@@ -1,5 +1,6 @@
 html {
 	background-image: -webkit-linear-gradient(top, rgb(254, 254, 254) 65%, rgb(216, 216, 216) 100%);
+	background-image: -moz-linear-gradient(top, rgb(254, 254, 254) 65%, rgb(216, 216, 216) 100%);
 	font: normal 12px arial,helvetica,verdana,sans-serif;
 	margin: 0;
 	min-height: 150px;
@@ -8,6 +9,8 @@ html {
 }
 
 body {
+    font-family: arial,helvetica,verdana,sans-serif;
+	font-size: 100%;
 	height: 130px;
 	margin: 0;
 	overflow: hidden;
@@ -41,6 +44,7 @@ section {
 
 header {
 	background-image: -webkit-linear-gradient(top, rgb(254, 254, 254), rgb(230, 230, 230));
+	background-image: -moz-linear-gradient(top, rgb(254, 254, 254), rgb(230, 230, 230));
 	border-bottom: 1px solid #CCC;
 	color: #999;
 	font-size: 16px;
@@ -68,8 +72,10 @@ header {
 
 button {
 	background-image: -webkit-linear-gradient(top, rgb(153, 153, 153), rgb(0, 0, 0));
+	background-image: -moz-linear-gradient(top, rgb(153, 153, 153), rgb(0, 0, 0));
 	border: 1px solid #333;
 	-webkit-border-radius: 3px;
+			border-radius: 3px;
 	color: #FFF;
 	cursor: pointer;
 	font-size: 14px;
@@ -146,26 +152,41 @@ button {
 	width: 16px;
 }
 
+.abacast:before      { background-image: url(../img/icons/abacast.png); }
 .accujazz:before     { background-image: url(../img/icons/accujazz.png); }
 .accuradio:before    { background-image: url(../img/icons/accuradio.png); }
 .amazon:before       { background-image: url(../img/icons/amazon.png); }
 .bandcamp:before     { background-image: url(../img/icons/bandcamp.png); }
 .beats:before        { background-image: url(../img/icons/beats.png); }
+.deezer:before       { background-image: url(../img/icons/deezer.png); }
+.di:before           { background-image: url(../img/icons/di.png); }
+.dubtrackfm:before   { background-image: url(../img/icons/dubtrackfm.png); }
 .earbits:before      { background-image: url(../img/icons/earbits.png); }
 .eighttracks:before  { background-image: url(../img/icons/eighttracks.png); }
 .focusatwill:before  { background-image: url(../img/icons/focusatwill.png); }
 .google:before       { background-image: url(../img/icons/google.png); }
+.groove:before       { background-image: url(../img/icons/groove.png); }
+.hoopla:before       { background-image: url(../img/icons/hoopla.png); }
 .indieshuffle:before { background-image: url(../img/icons/indieshuffle.png); }
 .jango:before        { background-image: url(../img/icons/jango.png); }
+.npr:before          { background-image: url(../img/icons/npr.png); }
 .pandora:before      { background-image: url(../img/icons/pandora.png); }
 .playerfm:before     { background-image: url(../img/icons/playerfm.png); }
 .plugdj:before       { background-image: url(../img/icons/plugdj.png); }
+.pocketcasts:before  { background-image: url(../img/icons/pocketcasts.png); }
+.relevant:before     { background-image: url(../img/icons/relevant.png); }
 .rhapsody:before     { background-image: url(../img/icons/rhapsody.png); }
+.sndtst:before       { background-image: url(../img/icons/sndtst.png); }
+.somafm:before		 { background-image: url(../img/icons/somafm.png); }
 .songza:before       { background-image: url(../img/icons/songza.png); }
-.sony:before         { background-image: url(../img/icons/sony.png); }
 .soundcloud:before   { background-image: url(../img/icons/soundcloud.png); }
+.spotify:before      { background-image: url(../img/icons/spotify.png); }
+.thedrop:before 	 { background-image: url(../img/icons/thedrop.png); }
 .thisismyjam:before  { background-image: url(../img/icons/thisismyjam.png); }
+.tidal:before        { background-image: url(../img/icons/tidal.png); }
 .vk:before           { background-image: url(../img/icons/vk.png); }
+.wonderfm:before     { background-image: url(../img/icons/wonderfm.png); }
+.xiami:before        { background-image: url(../img/icons/xiami.png); }
 .youtube:before      { background-image: url(../img/icons/youtube.png); }
 
 .album-art {
@@ -180,6 +201,7 @@ button {
 
 	.album-art img {
 		-webkit-box-shadow: 0 0 3px 0 #999;
+				box-shadow: 0 0 3px 0 #999;
 		height: 100px;
 		width: 100px;
 	}

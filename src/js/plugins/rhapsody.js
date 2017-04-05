@@ -10,16 +10,21 @@ rhapsody.init("rhapsody", "Rhapsody");
 rhapsody.test = function () {
     var napster  = /napster\.[A-Z\.]{2,}/i.test(document.location.hostname);
     var rhapsody = /rhapsody\.com/i.test(document.location.hostname);
-    return (rhapsody || napster);
+    var aldi_life = /app\.lifestore-flat\.de/i.test(document.location.hostname);
+    return (rhapsody || napster || aldi_life);
 };
 
 rhapsody.scrape = function () {
+    var timerArray = $(".player-time").text().trim().split("/");
+    var elapsed = timerArray[0];
+    var duration = timerArray[1];
+
     return {
-        artist:   $("#player-artist-link").text(),
-        duration: Utils.calculateDuration($("#player-total-time").text()),
-        elapsed:  Utils.calculateDuration($("#player-current-time").text()),
-        stopped:  $("#player-play").css("display") === "block",
-        title:    $("#player-track-link").text()
+        artist:   $(".player-artist").text().split("- ")[1].trim(),
+        title:    $(".player-track").text().trim(),
+        stopped:  $(".icon-play").attr("title") === "Play",
+        duration: Utils.calculateDuration(duration),
+        elapsed:  Utils.calculateDuration(elapsed)
     };
 };
 
